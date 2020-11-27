@@ -3,6 +3,6 @@
 project ("expert_method")
 
 add_subdirectory (src)
-add_executable (expert_method  app/expert_method.cpp "include/mathematic/service/MathVectorService.hpp" "include/mathematic/service/MatrixService.hpp" "include/expert_method/weights/WeightsStorage.hpp" "include/expert_method/weights/WeightsService.hpp")
-target_link_libraries (expert_method PUBLIC MathematicLib)
+add_executable (expert_method  app/expert_method.cpp "include/expert_method/competence/CompetenceResolver.hpp" )
+target_link_libraries (expert_method PUBLIC MathematicLib ExpertMethod)
 install (TARGETS expert_method DESTINATION bin)

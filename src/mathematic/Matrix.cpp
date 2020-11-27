@@ -40,6 +40,17 @@ MathVector& Matrix::operator[] (int i) {
 	return this->at(i);
 }
 
+Matrix& Matrix::operator= (Matrix& right) {
+	if (this == &right) {
+		return *this;
+	}
+	this->matrix->resize(right.getRowsSize(), right.getColsSize());
+	for (int i = 0; i < right.getRowsSize(); ++i) {
+		this->matrix->at(i) = right.at(i);
+	}
+	return *this;
+}
+
 Matrix operator+ (Matrix& matr1, Matrix& matr2) {
 	if (matr1.getRowsSize() != matr2.getRowsSize() ||
 		matr1.getColsSize() != matr2.getColsSize()) {
@@ -76,6 +87,21 @@ Matrix operator* (Matrix& matr1, Matrix& matr2) {
 			for (int k = 0; k < matr1.getColsSize(); ++k) {
 				result.at(i).at(j) += matr1.at(i).at(k) * matr2.at(k).at(j);
 			}
+		}
+	}
+	return result;
+}
+
+MathVector operator* (Matrix& matr, MathVector& vec) {
+	if (matr.getColsSize() != vec.size()) {
+		throw MatrixSizeException("Matrix number of \
+                                   columns not equal vector\
+                                   number of rows");
+	}
+	MathVector result = MathVector(vec.size());
+	for (int i = 0; i < matr.getRowsSize(); ++i) {
+		for (int j = 0; j < vec.size(); ++j) {
+			result.at(i) += matr.at(i).at(j) * vec.at(i);
 		}
 	}
 	return result;

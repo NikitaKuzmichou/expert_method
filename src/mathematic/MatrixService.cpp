@@ -27,11 +27,11 @@ double MatrixService::getMin(Matrix& matrix) {
 }
 
 Matrix MatrixService::getTransposed(Matrix& matrix) {
-	Matrix matrix = Matrix(matrix.getColsSize(), matrix.getRowsSize());
+	Matrix transposed = Matrix(matrix.getColsSize(), matrix.getRowsSize());
 	for (int i = 0; i < matrix.getRowsSize(); ++i) {
 		for (int j = 0; j < matrix.getColsSize(); ++j) {
-			matrix.at(j).at(i) = matrix.at(i).at(j);
+			transposed.at(j).at(i) = matrix.at(i).at(j);
 		}
 	}
-	return matrix;
+	return transposed;
 }
