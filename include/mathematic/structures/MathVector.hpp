@@ -4,9 +4,7 @@
 #include <vector>
 #include <memory>
 
-class MathVector {
-private:
-	std::shared_ptr<std::vector<double>> vector;
+class MathVector : public std::vector<double> {
 public:
 	MathVector();
 	MathVector(size_t size);
@@ -14,7 +12,6 @@ public:
 	double& at(int i);
 	size_t size() const;
 	MathVector& operator= (MathVector& vec);
-	double& operator[] (int scalar);
 	friend MathVector operator+ (MathVector& vec1, MathVector& vec2);
 	friend MathVector operator- (MathVector& vec1, MathVector& vec2);
 	friend MathVector operator* (MathVector& vec1, double scalar);

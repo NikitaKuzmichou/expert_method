@@ -13,6 +13,10 @@ Matrix::Matrix(size_t rows, size_t cols) {
 	this->setSize(rows, cols);
 }
 
+Matrix::Matrix(std::shared_ptr<std::vector<MathVector>> matrix) {
+	this->matrix = matrix;
+}
+
 Matrix::~Matrix() {
 	this->matrix.reset();
 }

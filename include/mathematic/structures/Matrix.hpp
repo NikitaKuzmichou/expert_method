@@ -10,6 +10,7 @@ public:
 	Matrix();
 	Matrix(size_t rows);
 	Matrix(size_t rows, size_t cols);
+	Matrix(std::shared_ptr<std::vector<MathVector>> matrix);
 	~Matrix();
 	size_t getRowsSize() const;
 	size_t getColsSize() const;

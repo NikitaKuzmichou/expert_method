@@ -1,12 +1,36 @@
-#include "../include/mathematic/structures/Matrix.hpp"
-#include "../include/expert_method/weights/WeightsService.hpp"
-#include "../include/mathematic/service/MatrixService.hpp"
-#include "../include/expert_method/competence/CompetenceResolver.hpp"
+#include "../include/lab_logic/LabLogic.hpp"
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+#include <Windows.h>
+
+std::shared_ptr<Matrix> readInput(std::string path) {
+	auto readed = std::make_shared<std::vector<MathVector>>();
+	std::ifstream fis(path);
+	if (fis.is_open()) {
+		std::string line;
+		auto mathVec = std::make_shared<MathVector>();
+		while (std::getline(fis, line)) {
+			for (int i = 0; i < line.size(); ++i) {
+				if (line.at(i) != ' ') {
+					mathVec->push_back(strtod(&line.at(i), nullptr));
+				}
+			}
+			readed->push_back(*mathVec);
+			mathVec = std::make_shared<MathVector>();
+		}
+	}
+	return std::make_shared<Matrix>(readed);
+}
 
 void coutVector(MathVector& vec) {
 	for (int i = 0; i < vec.size(); ++i) {
-		std::cout << vec.at(i) << std::endl;
+		std::cout << std::setw(10)
+			      << std::showpoint
+			      << std::setprecision(3)
+			      << std::left
+			      << vec.at(i) << " ";
 	}
 	std::cout << "\n" << std::endl;
 }
@@ -14,7 +38,11 @@ void coutVector(MathVector& vec) {
 void coutMatrix(Matrix& matrix) {
 	for (int i = 0; i < matrix.getRowsSize(); ++i) {
 		for (int j = 0; j < matrix.at(i).size(); ++j) {
-			std::cout << matrix[i][j] << " ";
+			std::cout << std::setw(10)
+				      << std::showpoint
+				      << std::setprecision(3)
+				      << std::right
+				      << matrix[i][j] << " ";
 		}
 		std::cout << std::endl;
 	}
@@ -22,15 +50,42 @@ void coutMatrix(Matrix& matrix) {
 }
 
 int main() {
-	auto matr = std::make_shared<Matrix>(2, 3);
-	(*matr)[0][0] = 0.8;
-	(*matr)[0][1] = 0.4;
-	(*matr)[0][2] = 0.7;
-	(*matr)[1][0] = 0.2;
-	(*matr)[1][1] = 0.6;
-	(*matr)[1][2] = 0.3;
-	CompetenceResolver resolver = CompetenceResolver(1);
-	resolver.resolveCompetence(matr);
-	coutVector(*resolver.getCompetence());
+	SetConsoleOutputCP(1251);
+	std::string FILE_PATH = 
+		"E:\\my_programms\\c++\\education\\LABS\\machine_learning\\expert_method\\input.txt";
+	auto matr = readInput(FILE_PATH);
+	LabLogic labLogic = LabLogic(matr);
+	labLogic.calculate();
+    std::cout << "Матрица индивидуальных весов" << std::endl;
+	coutMatrix(*labLogic.getIndividualWeights());
+	
+	std::cout << "Матрица нормализованных индивидуальных весов" << std::endl;
+	coutMatrix(*labLogic.getNormalizedWeights());
+	
+	std::cout << "Вектор-центроид" << std::endl;
+	coutVector(*labLogic.getCentroid());
+	
+	std::cout << "Вектор компетенции" << std::endl;
+	coutVector(*labLogic.getCompetence());
+	
+	std::cout << std::endl;
+	std::cout << "Коэффициент конкордации: " 
+		      << labLogic.getConcordanceCoefficient() 
+		      << std::endl;
+	std::cout << std::endl;
+	
+	std::cout << std::endl;
+	std::cout << "Матрица корреляции Спирмена" << std::endl;
+	coutMatrix(*labLogic.getSpearmanCorrelation());
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+	std::cout << "Коэффициент alpha: ";
+	std::cout << labLogic.getSignificance() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Число степеней свободы k: "
+		      << matr->getRowsSize() - 1
+		      << std::endl;
 	return 0;
 }
